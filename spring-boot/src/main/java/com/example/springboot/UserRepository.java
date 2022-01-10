@@ -16,7 +16,7 @@ public class UserRepository {
     JdbcTemplate jdbcTemplate;
 
     public int addUser(User user){
-        return jdbcTemplate.update("insert into users_tbl (username, password) values (?,?)", user.getUsername(), user.getPassword());
+        return jdbcTemplate.update("insert into users_tbl (username, password, token) values (?,?,?)", user.getUsername(), user.getPassword(), user.getToken());
     }
 
 
@@ -27,11 +27,21 @@ public class UserRepository {
             LinkedCaseInsensitiveMap found = (LinkedCaseInsensitiveMap) jdbcTemplate.queryForList(sql + "'" + username + "'").get(0);
             System.out.println(found);
 
-            User user = new User((String) found.get("username"), (String) found.get("password"));
+            User user = new User((String) found.get("username"), (String) found.get("password"), (String) found.get("token"));
 
             return user;
         } catch (EmptyResultDataAccessException e) {
             return null;
+        }
+    }
+
+    public boolean doesExist(String username){
+        String sql = "select * from users_tbl where username=";
+        List found =  jdbcTemplate.queryForList(sql + "'" + username + "'");
+        if (found.size() == 0){
+            return false; //no username exists
+        } else {
+            return true;
         }
     }
 

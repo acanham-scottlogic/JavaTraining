@@ -19,31 +19,33 @@ import java.util.stream.Collectors;
 
 @RestController
 public class UserController {
+    User currentUser;
 
     @Autowired
     UserRepository userRepository;
 
     //A new user with a new token is set each time
-    //Will need to check username and password against a database each time
-    //Add this bit as a new method later
     @PostMapping("/newUser")
     public User createAccount(@RequestParam("username") String username, @RequestParam("password") String password){
-    String token = getJWTToken(username);
-    User user = new User(username, password);
-    user.setToken(token);
-    System.out.println("userCreated");//ADD SOME CODE HERE TO STOP TWO USERS OF THE SAME USERNAME BEING CREATED
-    userRepository.addUser(user);
-    return user;
+    if (userRepository.doesExist(username)){
+        System.out.println("username is already being used");
+        currentUser = null;
+        return null;
+    } else {
+        String token = getJWTToken(username);
+        User user = new User(username, password, token);
+        System.out.println("userCreated");
+        userRepository.addUser(user);
+        currentUser = user;
+        return user;
+        }
     }
 
     @PostMapping("/user")
     public User login(@RequestParam("username") String username, @RequestParam("password") String password){
-
         User fromDB = userRepository.getUser(username);
         System.out.println("userRepository successful");
         if (fromDB != null){
-            System.out.println("username: " + fromDB.getUsername());
-            System.out.println("password: " + fromDB.getPassword());
             System.out.println(fromDB);
         } else {
             System.out.println("username not found");

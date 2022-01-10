@@ -8,10 +8,11 @@ public class User {
 
     public User(){super();}
 
-    public User(String username,String password){
+    public User(String username,String password, String token){
         super();
         this.username = username;
         this.password = password;
+        this.token = token;
     }
 
     public void setToken(String token){
