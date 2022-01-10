@@ -7,8 +7,7 @@ import javax.validation.constraints.NotNull;
 
 public class Order {
 
-    @NotBlank(message="account cannot be empty")
-    private final String account;
+    private String account;
 
     @NotNull(message = "price cannot be a null value")
     @DecimalMin(value = "0.01", message = "Price must be positive and greater than 0")
@@ -34,6 +33,8 @@ public class Order {
         this.quantity = quantity;
     }
 
+    public void setAccount(User user){ account = user.getUsername(); }
+
     public String getAccount(){
         return account;
     }
@@ -49,4 +50,10 @@ public class Order {
     public boolean getActionBuy(){
         return actionBuy;
     }
+
+    @Override
+    public String toString(){
+        return "Order{" + "account= " + account + "  price= " + price + " quantity= " + quantity + " actionBuy= " + actionBuy + "}";
+    }
+
 }

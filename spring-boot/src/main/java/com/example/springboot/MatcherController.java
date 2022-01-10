@@ -1,6 +1,7 @@
 package com.example.springboot;
-
-
+//now addded this stuff to userController.
+//This allows the current user to be automatically used for adding orders without having to switch the variable over different classes coz i cba to do that
+/*
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 public class MatcherController {
     Matcher matcher = new Matcher();
+    User currentUser;
 
     @GetMapping(path="/")
     public String hello(){
@@ -40,11 +42,16 @@ public class MatcherController {
     @PostMapping(path="/addOrder", consumes = "application/json", produces="application/json")
     public String addOrder( @Valid
                             @RequestBody
-                           Order order)//maybe change this to have account as username using a get method in JWTAuthFilter
+                           Order order)
     {
+        order.setAccount(currentUser);
         matcher.addOrder(order);
        List<Object> buySellTrade = Arrays.asList(matcher.getBuyList(),matcher.getSellList(),matcher.getTradesList());
        System.out.println(buySellTrade);
         return "congrats, it worked";
     }
-}
+
+    public void setCurrentUser(User user){
+        currentUser = user;
+    }
+}*/

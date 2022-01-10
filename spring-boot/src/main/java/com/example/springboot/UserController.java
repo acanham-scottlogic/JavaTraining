@@ -4,15 +4,14 @@ package com.example.springboot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -65,4 +64,41 @@ public class UserController {
                 .signWith(SignatureAlgorithm.HS512, secretKey.getBytes()).compact();//maybe add setIssuedAt and setExpirationDate
         return "Bearer " + token;
     }
+
+    //matcher controller
+    Matcher matcher = new Matcher();
+
+
+    @GetMapping(path="/")
+    public String hello(){
+        return "hello World";
+    }
+
+    @GetMapping(path = "/buyList")
+    public ArrayList<Order> getButList(){
+        return matcher.getBuyList();
+    }
+
+    @GetMapping(path = "/sellList")
+    public ArrayList<Order> getSellList(){
+        return matcher.getSellList();
+    }
+
+    @GetMapping(path = "/tradesList")
+    public ArrayList<Trade> getTradesList(){
+        return matcher.getTradesList();
+    }
+
+    @PostMapping(path="/addOrder", consumes = "application/json", produces="application/json")
+    public String addOrder( @Valid
+                            @RequestBody
+                                    Order order) //Don't have to put the account on, just enter price, quantity and actionBuy
+    {
+        order.setAccount(currentUser);
+        matcher.addOrder(order);
+        List<Object> buySellTrade = Arrays.asList(matcher.getBuyList(),matcher.getSellList(),matcher.getTradesList());
+        System.out.println(buySellTrade);
+        return "congrats, it worked";
+    }
+
 }
