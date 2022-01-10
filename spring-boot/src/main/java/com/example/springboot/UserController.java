@@ -101,4 +101,28 @@ public class UserController {
         return "congrats, it worked";
     }
 
+    //The private list ones go by the current username, and not by the token.
+    @GetMapping(path = "/privateBuyList")
+    public ArrayList<Order> getPrivateBuyList(){
+        ArrayList<Order> privateBuy = new ArrayList<Order>();
+        for (int i=0; i<matcher.getBuyList().size(); i++){
+            if(matcher.getBuyList().get(i).getAccount().equals(currentUser.getUsername())){
+                privateBuy.add(matcher.getBuyList().get(i));
+            }
+        }
+        return privateBuy;
+    }
+
+    @GetMapping(path = "/privateSellList")
+    public ArrayList<Order> getPrivateSellList(){
+        ArrayList<Order> privateSell = new ArrayList<Order>();
+        for (int i=0; i<matcher.getSellList().size(); i++){
+            if(matcher.getSellList().get(i).getAccount().equals(currentUser.getUsername())){
+                privateSell.add(matcher.getSellList().get(i));
+            }
+        }
+        return privateSell;
+    }
+
+
 }
