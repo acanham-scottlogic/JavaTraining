@@ -45,6 +45,7 @@ public class ValidationTest {
         assertTrue(violations.isEmpty());
     }
 
+    /*  Allowed since updated to link user and account
     @Test
     void emptyAccountOrder(){
         Order order = new Order("",3.51,5,false);
@@ -55,7 +56,7 @@ public class ValidationTest {
         assertEquals("account", violation.getPropertyPath().toString());
         assertEquals("", violation.getInvalidValue());
     }//Some stuff that validator factory can do that I found on the internet
-
+*/
     @Test
     void negPriceOrder(){
         Order order = new Order("account",-3.51,5,false);
